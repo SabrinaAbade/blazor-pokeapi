@@ -1,0 +1,138 @@
+```css
+/* Visual da aplicação PokéAPI */
+
+html, body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f3f5f9;
+    color: #242b3a;
+    margin: 0;
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+}
+
+.pokemon-container {
+    max-width: 700px;
+    margin: 50px auto;
+    padding: 30px;
+    text-align: center;
+}
+
+.pokemon-container h1 {
+    font-size: 42px;
+    color: #e3350d;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.subtitle {
+    color: #64748b;
+    margin-bottom: 30px;
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.search-box input {
+    flex: 1;
+    min-width: 0;
+    padding: 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+}
+
+.search-box input:focus {
+    border-color: #e3350d;
+    box-shadow: 0 0 0 3px #e3350d22;
+}
+
+.search-box button {
+    padding: 14px 22px;
+    border: none;
+    border-radius: 10px;
+    background: #e3350d;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.search-box button:hover {
+    background: #bd2a0b;
+}
+
+.search-box button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.message {
+    color: #b42318;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.pokemon-card {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px #00000012;
+    margin-top: 25px;
+}
+
+.pokemon-card img {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+}
+
+.pokemon-card h2 {
+    color: #e3350d;
+    margin: 10px 0 25px;
+    font-size: 28px;
+}
+
+.pokemon-info {
+    max-width: 350px;
+    margin: auto;
+    text-align: left;
+}
+
+.pokemon-info p {
+    background: #f3f5f9;
+    padding: 13px 16px;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+@media (max-width: 600px) {
+    .pokemon-container {
+        margin: 20px auto;
+        padding: 18px;
+    }
+
+    .pokemon-container h1 {
+        font-size: 34px;
+    }
+
+    .search-box {
+        flex-direction: column;
+    }
+
+    .search-box button {
+        width: 100%;
+    }
+
+    .pokemon-card {
+        padding: 20px;
+    }
+}

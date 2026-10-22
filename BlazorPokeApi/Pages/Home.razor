@@ -1,0 +1,126 @@
+﻿```razor
+@page "/"
+@using System.Net.Http.Json
+@using System.Text.Json.Serialization
+@inject HttpClient Http
+
+<PageTitle>PokéAPI | Pesquisar Pokémon</PageTitle>
+
+<div class="pokemon-container">
+    <h1>PokéAPI</h1>
+    <p class="subtitle">Descubra informações sobre seus Pokémon favoritos!</p>
+
+    <div class="search-box">
+        <input @bind="nomePokemon"
+               @bind:event="oninput"
+               placeholder="Digite o nome do Pokémon..."
+               @onkeydown="TratarTecla" />
+
+        <button @onclick="BuscarPokemon" disabled="@carregando">
+            @(carregando ? "Buscando..." : "Pesquisar")
+        </button>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(mensagem))
+    {
+        <p class="message">@mensagem</p>
+    }
+
+    @if (pokemon != null)
+    {
+        <div class="pokemon-card">
+            <img src="@pokemon.Sprites.FrontDefault"
+                 alt="Imagem de @pokemon.Name" />
+
+            <h2>@pokemon.Name.ToUpperInvariant()</h2>
+
+            <div class="pokemon-info">
+                <p><strong>ID:</strong> @pokemon.Id</p>
+                <p><strong>Nome:</strong> @pokemon.Name</p>
+                <p><strong>Altura:</strong> @pokemon.Height</p>
+                <p><strong>Peso:</strong> @pokemon.Weight</p>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private string nomePokemon = "ditto";
+    private string mensagem = "";
+    private bool carregando;
+    private Pokemon? pokemon;
+
+    private async Task TratarTecla(
+        Microsoft.AspNetCore.Components.Web.KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await BuscarPokemon();
+        }
+    }
+
+    private async Task BuscarPokemon()
+    {
+        if (carregando)
+            return;
+
+        if (string.IsNullOrWhiteSpace(nomePokemon))
+        {
+            mensagem = "Digite o nome de um Pokémon.";
+            pokemon = null;
+            return;
+        }
+
+        carregando = true;
+        mensagem = "";
+        pokemon = null;
+
+        try
+        {
+            var nome = Uri.EscapeDataString(nomePokemon.Trim().ToLowerInvariant());
+
+            pokemon = await Http.GetFromJsonAsync<Pokemon>(
+                $"https://pokeapi.co/api/v2/pokemon/{nome}");
+
+            if (pokemon == null)
+                mensagem = "Pokémon não encontrado.";
+        }
+        catch (HttpRequestException)
+        {
+            mensagem = "Não foi possível conectar à PokéAPI.";
+        }
+        catch (System.Text.Json.JsonException)
+        {
+            mensagem = "Não foi possível interpretar os dados recebidos.";
+        }
+        finally
+        {
+            carregando = false;
+        }
+    }
+
+    public class Pokemon
+    {
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; } = "";
+
+        [JsonPropertyName("height")]
+        public int Height { get; set; }
+
+        [JsonPropertyName("weight")]
+        public int Weight { get; set; }
+
+        [JsonPropertyName("sprites")]
+        public PokemonSprites Sprites { get; set; } = new();
+    }
+
+    public class PokemonSprites
+    {
+        [JsonPropertyName("front_default")]
+        public string? FrontDefault { get; set; }
+    }
+}
+```
